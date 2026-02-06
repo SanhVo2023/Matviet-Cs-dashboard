@@ -1,0 +1,120 @@
+================================================================================
+              MAT VIET DASHBOARD - GITHUB & NETLIFY DEPLOYMENT
+================================================================================
+
+ADMIN CREDENTIALS (SAVE THESE!)
+-------------------------------
+Email: cskh@matviet.com.vn
+Password: MatViet@Cskh2026!
+
+Email: phat.th@matkinh.com.vn
+Password: MatViet@Phat2026!
+
+================================================================================
+STEP 1: CREATE GITHUB REPOSITORY
+================================================================================
+
+1. Go to: https://github.com/new
+
+2. Fill in:
+   - Repository name: matviet-dashboard
+   - Description: Mat Viet Customer Analytics Dashboard
+   - Visibility: Private (recommended)
+   - DO NOT initialize with README
+
+3. Click "Create repository"
+
+4. Copy the repository URL (looks like: https://github.com/YOUR_USERNAME/matviet-dashboard.git)
+
+
+================================================================================
+STEP 2: PUSH CODE TO GITHUB
+================================================================================
+
+Open Command Prompt/Terminal and run:
+
+cd "D:\Power Bi\BC bán hàng\matviet-dashboard"
+git remote add origin https://github.com/YOUR_USERNAME/matviet-dashboard.git
+git branch -M main
+git push -u origin main
+
+(Replace YOUR_USERNAME with your GitHub username)
+
+
+================================================================================
+STEP 3: DEPLOY TO NETLIFY
+================================================================================
+
+1. Go to: https://app.netlify.com
+
+2. Click "Add new site" > "Import an existing project"
+
+3. Choose "GitHub" and authorize Netlify
+
+4. Select your "matviet-dashboard" repository
+
+5. Configure build settings:
+   - Build command: npm run build
+   - Publish directory: .next
+   - (These should auto-detect from netlify.toml)
+
+6. Click "Add environment variables" and add:
+
+   NEXT_PUBLIC_SUPABASE_URL = https://futubpmmetfqppedhhph.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1dHVicG1tZXRmcXBwZWRoaHBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzMxMDgsImV4cCI6MjA4NTI0OTEwOH0.hXpcDy_4_oruKn8w05pI6DLCl2uw4Uhq1K_LtCzIwTI
+
+7. Click "Deploy site"
+
+8. Wait for deployment (2-3 minutes)
+
+9. Your site will be live at: https://YOUR-SITE-NAME.netlify.app
+
+
+================================================================================
+STEP 4: CONFIGURE SUPABASE AUTH (IMPORTANT!)
+================================================================================
+
+1. Go to: https://supabase.com/dashboard/project/futubpmmetfqppedhhph/auth/url-configuration
+
+2. Add your Netlify URL to "Redirect URLs":
+   - https://YOUR-SITE-NAME.netlify.app
+   - https://YOUR-SITE-NAME.netlify.app/login
+   - https://YOUR-SITE-NAME.netlify.app/dashboard
+
+3. Add to "Site URL":
+   - https://YOUR-SITE-NAME.netlify.app
+
+
+================================================================================
+OPTIONAL: CUSTOM DOMAIN
+================================================================================
+
+1. In Netlify, go to "Domain settings"
+
+2. Click "Add custom domain"
+
+3. Enter your domain (e.g., dashboard.matviet.com.vn)
+
+4. Follow DNS configuration instructions
+
+5. Update Supabase Auth redirect URLs with new domain
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+BUILD FAILS:
+- Check if all environment variables are set in Netlify
+- Check build logs for specific error messages
+
+LOGIN NOT WORKING:
+- Verify Supabase redirect URLs include your Netlify domain
+- Check browser console for auth errors
+
+DATA NOT LOADING:
+- Verify NEXT_PUBLIC_SUPABASE_URL and ANON_KEY are correct
+- Check Supabase RLS policies
+
+
+================================================================================
