@@ -4,15 +4,6 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_PUBLIC_SUPABASE_URL = "https://futubpmmetfqppedhhph.supabase.co"
-  NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1dHVicG1tZXRmcXBwZWRoaHBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzMxMDgsImV4cCI6MjA4NTI0OTEwOH0.hXpcDy_4_oruKn8w05pI6DLCl2uw4Uhq1K_LtCzIwTI"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Redirects for SPA routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin"]}
