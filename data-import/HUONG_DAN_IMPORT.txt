@@ -1,0 +1,231 @@
+================================================================================
+           MAT VIET DASHBOARD - HUONG DAN IMPORT DU LIEU TU DONG
+                    Auto Import Data Pipeline Guide
+================================================================================
+
+TONG QUAN / OVERVIEW
+--------------------
+He thong tu dong import du lieu SMS/ZNS va Don hang vao Supabase.
+Chi can copy file vao thu muc, he thong se tu dong xu ly va cap nhat dashboard.
+
+This system automatically imports SMS/ZNS and Order data to Supabase.
+Just copy files to the folder and the system will process and update the dashboard.
+
+
+================================================================================
+                              CACH SU DUNG / HOW TO USE
+================================================================================
+
+BUOC 1: KHOI DONG IMPORT SCRIPT
+-------------------------------
+Mo Terminal/Command Prompt va chay:
+
+    cd "D:\Power Bi\BC bán hàng\matviet-dashboard"
+    npm run import
+
+Giu terminal nay mo de script tiep tuc chay.
+Keep this terminal open for the script to continue running.
+
+
+BUOC 2: COPY FILE VAO THU MUC TUONG UNG
+---------------------------------------
+
+    +------------------------------------------------------------------+
+    |  LOAI DU LIEU         |  THU MUC                                 |
+    +------------------------------------------------------------------+
+    |  SMS/ZNS (eSMS)       |  data-import\sms\                        |
+    |  Don hang (Orders)    |  data-import\orders\                     |
+    +------------------------------------------------------------------+
+
+Duong dan day du:
+- SMS:    D:\Power Bi\BC bán hàng\matviet-dashboard\data-import\sms\
+- Orders: D:\Power Bi\BC bán hàng\matviet-dashboard\data-import\orders\
+
+
+BUOC 3: CHO XU LY TU DONG
+-------------------------
+He thong se tu dong:
+1. Phat hien file moi
+2. Doc va parse du lieu
+3. Lien ket so dien thoai voi khach hang
+4. Phan loai chien dich (Birthday, Win-back, v.v.)
+5. Upload len Supabase
+6. Lam moi cache dashboard
+7. Chuyen file da xu ly vao thu muc "processed\"
+
+The system will automatically:
+1. Detect new files
+2. Read and parse data
+3. Link phone numbers to customers
+4. Classify campaigns (Birthday, Win-back, etc.)
+5. Upload to Supabase
+6. Refresh dashboard caches
+7. Move processed files to "processed\" folder
+
+
+================================================================================
+                           DINH DANG FILE / FILE FORMATS
+================================================================================
+
+FILE SMS/ZNS (eSMS Report)
+--------------------------
+Ten file mau: info@matkinh.com.vn_01-01-2026_31-01-2026_detail.xlsx
+
+Cac cot can thiet (tu dong nhan dien):
+    - STT
+    - Ma tin nhan
+    - Loai tin nhan (Brandname CSKH, ZNS, ...)
+    - Brandname
+    - Thoi gian gui (DD/MM/YYYY HH:mm)
+    - Noi dung
+    - So dien thoai
+    - Mang (Viettel, Mobifone, ...)
+    - Tong so tin MT
+    - Thanh cong
+    - That bai
+    - Don gia (VND/MT)
+    - Thanh tien
+    - Template Id (cho ZNS)
+
+Luu y: Header o dong 6-7, du lieu bat dau tu dong 8
+Note: Headers at row 6-7, data starts from row 8
+
+
+FILE DON HANG (Bao cao ban hang)
+--------------------------------
+Cac cot can thiet:
+    - So CT ban/tra (Ma don hang)
+    - Ngay CT (Ngay dat hang)
+    - Ma KH (Ma khach hang)
+    - Ma CH (Ma cua hang)
+    - Thanh toan / Thanh tien (Gia tri don hang)
+    - NV1 ban (Nhan vien ban hang)
+
+
+================================================================================
+                         CAU TRUC THU MUC / FOLDER STRUCTURE
+================================================================================
+
+matviet-dashboard\
+    +-- data-import\
+    |       +-- sms\            <-- Bo file eSMS vao day
+    |       |                       Drop eSMS files here
+    |       |
+    |       +-- orders\         <-- Bo file Don hang vao day
+    |       |                       Drop Order files here
+    |       |
+    |       +-- processed\      <-- File da xu ly se chuyen vao day
+    |                               Processed files moved here
+    |
+    +-- scripts\
+            +-- auto-import.js  <-- Script xu ly tu dong
+
+
+================================================================================
+                           XU LY LOI / TROUBLESHOOTING
+================================================================================
+
+LOI: "Missing Supabase credentials"
+-----------------------------------
+Kiem tra file .env.local co chua:
+    NEXT_PUBLIC_SUPABASE_URL=https://futubpmmetfqppedhhph.supabase.co
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
+
+
+LOI: "Could not find header row"
+--------------------------------
+File Excel khong dung dinh dang eSMS hoac Bao cao ban hang.
+Kiem tra file co cac cot can thiet khong.
+
+
+LOI: "No valid messages found"
+------------------------------
+- Kiem tra cot "So dien thoai" co du lieu khong
+- Kiem tra cot "Thoi gian gui" co dung dinh dang DD/MM/YYYY khong
+
+
+LOI: File khong duoc xu ly
+--------------------------
+- Chi ho tro file .xlsx, .xls, .csv
+- File tam (~$...) se bi bo qua
+- Doi 2-3 giay sau khi copy file
+
+
+REFRESH CACHE THU CONG
+----------------------
+Neu can lam moi cache thu cong, chay SQL trong Supabase:
+
+    SELECT * FROM refresh_all_sms_caches();
+
+Hoac tung phan:
+    SELECT refresh_sms_cache();
+    SELECT refresh_revenue_cache();
+
+
+================================================================================
+                         THEM CHIEN DICH MOI / ADD NEW CAMPAIGNS
+================================================================================
+
+THEM PATTERN SMS MOI
+--------------------
+Khi co noi dung SMS moi can phan loai:
+
+1. Tim campaign_type_id:
+   SELECT id, name FROM sms_zns_campaign_types;
+
+2. Them pattern:
+   INSERT INTO sms_pattern_campaign_map (pattern, campaign_type_id, description)
+   VALUES ('noi dung can tim', 'uuid-cua-campaign', 'Mo ta');
+
+
+THEM TEMPLATE ZNS MOI
+---------------------
+1. Tim campaign_type_id tu bang sms_zns_campaign_types
+
+2. Them mapping:
+   INSERT INTO sms_template_campaign_map (template_id, campaign_type_id, description)
+   VALUES ('template_id_moi', 'uuid-cua-campaign', 'Mo ta');
+
+
+TAO CAMPAIGN TYPE MOI
+---------------------
+INSERT INTO sms_zns_campaign_types (name, description, channel, conversion_intent)
+VALUES ('Ten Campaign', 'Mo ta', 'both', 'sales');
+
+conversion_intent: 'sales' (co muc dich chuyen doi) hoac 'none' (khong)
+
+
+================================================================================
+                              LIEN HE HO TRO / SUPPORT
+================================================================================
+
+Neu gap van de, kiem tra:
+1. Terminal chay npm run import co hien thi loi gi khong
+2. File co dung dinh dang Excel (.xlsx) khong
+3. Ket noi internet co on dinh khong
+
+Dashboard URL: http://localhost:3000/sms-analytics
+(hoac port 3006 neu 3000 da duoc su dung)
+
+
+================================================================================
+                                   QUICK START
+================================================================================
+
+# Mo 2 terminal
+
+# Terminal 1 - Chay dashboard:
+cd "D:\Power Bi\BC bán hàng\matviet-dashboard"
+npm run dev
+
+# Terminal 2 - Chay auto-import:
+cd "D:\Power Bi\BC bán hàng\matviet-dashboard"
+npm run import
+
+# Copy file eSMS vao:
+# D:\Power Bi\BC bán hàng\matviet-dashboard\data-import\sms\
+
+# Xong! Dashboard se tu dong cap nhat.
+# Done! Dashboard will auto-update.
+
+================================================================================

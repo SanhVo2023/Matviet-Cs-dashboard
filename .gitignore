@@ -36,6 +36,16 @@ yarn-error.log*
 # vercel
 .vercel
 
+# netlify
+.netlify
+
+# data import processed files
+data-import/processed/
+
+# temp files
+nul
+~$*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
