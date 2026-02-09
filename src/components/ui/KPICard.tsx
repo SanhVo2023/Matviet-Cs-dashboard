@@ -149,25 +149,25 @@ export function KPICard({
   return (
     <div className="relative group">
       {/* Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-slate-900/60 backdrop-blur-sm border border-slate-800 p-5 transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-black/20">
+      <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-slate-900/60 backdrop-blur-sm border border-slate-800 p-3 sm:p-5 transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-black/20">
         {/* Gradient Background */}
         <div
-          className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${config.gradient} rounded-full blur-2xl opacity-60`}
+          className={`absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-gradient-to-bl ${config.gradient} rounded-full blur-2xl opacity-60`}
         />
 
         {/* Content */}
         <div className="relative z-10">
           {/* Top Row - Icon & Title */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-start justify-between mb-2 sm:mb-4">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div
-                className={`flex h-11 w-11 items-center justify-center rounded-xl ${config.iconBg} shadow-lg ${config.iconShadow}`}
+                className={`flex h-8 w-8 sm:h-11 sm:w-11 items-center justify-center rounded-lg sm:rounded-xl ${config.iconBg} shadow-lg ${config.iconShadow}`}
               >
-                <Icon className="h-5 w-5 text-white" />
+                <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-400">{title}</p>
-                {subtitle && <p className={`text-xs ${config.accent} mt-0.5`}>{subtitle}</p>}
+                <p className="text-xs sm:text-sm font-medium text-slate-400 line-clamp-1">{title}</p>
+                {subtitle && <p className={`text-xs ${config.accent} mt-0.5 hidden sm:block`}>{subtitle}</p>}
               </div>
             </div>
           </div>
@@ -175,7 +175,7 @@ export function KPICard({
           {/* Value Row */}
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-2xl font-bold text-white tracking-tight">{value}</p>
+              <p className="text-lg sm:text-2xl font-bold text-white tracking-tight">{value}</p>
 
               {/* Change indicator */}
               {change !== undefined && (

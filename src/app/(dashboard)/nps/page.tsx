@@ -359,23 +359,26 @@ export default async function NPSPage({
   // For now, use the overall if we have it, or show a message that it's overall
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header - responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">NPS Analytics</h1>
-          <p className="text-slate-400 mt-1">
-            {periodLabel} • Eligible feedback: within ±30 days of transaction
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">NPS Analytics</h1>
+          <p className="text-sm sm:text-base text-slate-400 mt-1">
+            {periodLabel} • Eligible: ±30 days
           </p>
         </div>
         <RefreshNPSButton />
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Filter - responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label className="text-sm text-slate-400">Filter by Month:</label>
         <MonthSelector availableMonths={availableMonths} selectedMonth={selectedMonth} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* KPI Cards - responsive grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         <KPICard
           title="NPS Score"
           value={displayStats.nps_score}
@@ -410,31 +413,34 @@ export default async function NPSPage({
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-8 flex flex-col items-center justify-center">
-          <h2 className="text-xl font-semibold text-white mb-4">Net Promoter Score</h2>
-          <NPSGauge value={displayStats.nps_score} size={240} />
-          <div className="mt-8 grid grid-cols-3 gap-6 w-full">
-            <div className="text-center p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-              <p className="text-3xl font-bold text-emerald-400">{promoterPct}%</p>
-              <p className="text-sm text-slate-400 mt-1">Promoters</p>
-              <p className="text-xs text-emerald-400/70">{displayStats.promoters.toLocaleString()}</p>
+      {/* NPS Gauge and Trend - responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-8 flex flex-col items-center justify-center">
+          <h2 className="text-lg sm:text-xl font-semibold text-white mb-4">Net Promoter Score</h2>
+          <div className="scale-75 sm:scale-100 origin-center">
+            <NPSGauge value={displayStats.nps_score} size={240} />
+          </div>
+          <div className="mt-4 sm:mt-8 grid grid-cols-3 gap-2 sm:gap-6 w-full">
+            <div className="text-center p-2 sm:p-3 bg-emerald-500/10 rounded-lg sm:rounded-xl border border-emerald-500/20">
+              <p className="text-xl sm:text-3xl font-bold text-emerald-400">{promoterPct}%</p>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">Promoters</p>
+              <p className="text-xs text-emerald-400/70 hidden sm:block">{displayStats.promoters.toLocaleString()}</p>
             </div>
-            <div className="text-center p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
-              <p className="text-3xl font-bold text-amber-400">{passivePct}%</p>
-              <p className="text-sm text-slate-400 mt-1">Passives</p>
-              <p className="text-xs text-amber-400/70">{displayStats.passives.toLocaleString()}</p>
+            <div className="text-center p-2 sm:p-3 bg-amber-500/10 rounded-lg sm:rounded-xl border border-amber-500/20">
+              <p className="text-xl sm:text-3xl font-bold text-amber-400">{passivePct}%</p>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">Passives</p>
+              <p className="text-xs text-amber-400/70 hidden sm:block">{displayStats.passives.toLocaleString()}</p>
             </div>
-            <div className="text-center p-3 bg-red-500/10 rounded-xl border border-red-500/20">
-              <p className="text-3xl font-bold text-red-400">{detractorPct}%</p>
-              <p className="text-sm text-slate-400 mt-1">Detractors</p>
-              <p className="text-xs text-red-400/70">{displayStats.detractors.toLocaleString()}</p>
+            <div className="text-center p-2 sm:p-3 bg-red-500/10 rounded-lg sm:rounded-xl border border-red-500/20">
+              <p className="text-xl sm:text-3xl font-bold text-red-400">{detractorPct}%</p>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">Detractors</p>
+              <p className="text-xs text-red-400/70 hidden sm:block">{displayStats.detractors.toLocaleString()}</p>
             </div>
           </div>
         </div>
 
-        <div className="lg:col-span-2 bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">NPS Trend by Month</h2>
+        <div className="lg:col-span-2 bg-slate-800/50 border border-slate-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">NPS Trend by Month</h2>
           <MultiLineChart
             data={npsTrendData}
             lines={[{ key: "score", name: "NPS Score", color: "#10b981" }]}
