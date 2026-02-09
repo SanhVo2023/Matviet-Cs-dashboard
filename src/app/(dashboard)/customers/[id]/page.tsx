@@ -89,14 +89,19 @@ async function getCustomerData(id: string) {
       .order("responded_at", { ascending: false }),
 
     // Get unified timeline events (with error handling)
-    supabase
-      .from("v_customer_timeline")
-      .select("*")
-      .eq("customer_id", id)
-      .order("event_date", { ascending: false })
-      .limit(100)
-      .then(res => res)
-      .catch(() => ({ data: [], error: null })),
+    (async () => {
+      try {
+        const res = await supabase
+          .from("v_customer_timeline")
+          .select("*")
+          .eq("customer_id", id)
+          .order("event_date", { ascending: false })
+          .limit(100);
+        return res;
+      } catch {
+        return { data: [], error: null };
+      }
+    })(),
 
     // Get SMS/ZNS messages
     supabase
